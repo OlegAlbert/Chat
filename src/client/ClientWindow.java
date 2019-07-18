@@ -19,7 +19,7 @@ public class ClientWindow extends JFrame {
     private JTextField jtfName;
     private JTextArea jtaAreaMessage;
 
-    private String clientName = "";
+    public String clientName = "";
 
     public String getClientName() {
         return this.clientName;
@@ -120,11 +120,12 @@ public class ClientWindow extends JFrame {
                     } else {
                         out.println("Anonym leave the chat.");
                     }
-                    out.println("/exit");
+                    out.println("exit");
                     out.flush();
                     out.close();
                     in.close();
                     clientSocket.close();
+
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

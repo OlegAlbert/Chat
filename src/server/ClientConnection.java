@@ -34,7 +34,7 @@ public class ClientConnection implements Runnable {
             while (true) {
                 if (in.hasNext()) {
                     String clientMsg = in.nextLine();
-                    if (clientMsg.equalsIgnoreCase("/exit")) {
+                    if (clientMsg.endsWith("exit")) {
                         break;
                     }
                     System.out.println(clientMsg);
