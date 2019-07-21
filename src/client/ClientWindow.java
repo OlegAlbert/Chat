@@ -11,75 +11,74 @@ import java.util.Scanner;
 public class ClientWindow extends JFrame {
     private static final String HOST = "localhost";
     private static final int PORT = 1234;
-    private Socket clientSocket;
-    private Scanner in;
-    private PrintWriter out;
+    private Socket clientSocket;        // client socket
+    private Scanner in;                 // for input stream
+    private PrintWriter out;            // for output stream
 
-    private JTextField jtfMessage;
-    private JTextField jtfName;
-    private JTextArea jtaAreaMessage;
+    private JTextField jtfMessage;      // field for message
+    private JTextField jtfName;         // field for client's name
+    private JTextArea jtaAreaMessage;   // area for messages
 
-    public String clientName = "";
+    private String clientName = "";     // client's name
 
-    public String getClientName() {
+    /*public String getClientName() {
         return this.clientName;
-    }
+    }*/
 
     public ClientWindow() {
         try {
-            clientSocket = new Socket(HOST, PORT);
-            in = new Scanner(clientSocket.getInputStream());
-            out = new PrintWriter(clientSocket.getOutputStream());
+            clientSocket = new Socket(HOST, PORT);                  // creating socket
+            in = new Scanner(clientSocket.getInputStream());        // creating input stream
+            out = new PrintWriter(clientSocket.getOutputStream());  // creating output stream
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        setBounds(600, 300, 600, 500);
-        setTitle("Client");
+        setBounds(600, 300, 600, 500);          // size of window
+        setTitle("Client");                                         // name of window
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         jtaAreaMessage = new JTextArea();
         jtaAreaMessage.setEditable(false);
         jtaAreaMessage.setLineWrap(true);
 
-        JScrollPane jsp = new JScrollPane(jtaAreaMessage);
+        JScrollPane jsp = new JScrollPane(jtaAreaMessage);          // scroll for messages' area
         add(jsp, BorderLayout.CENTER);
 
-        JLabel jlNumberOfClients = new JLabel("Number of clients: ");
+        JLabel jlNumberOfClients = new JLabel("Number of clients: "); // label for counting number of clients
         add(jlNumberOfClients, BorderLayout.NORTH);
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
         add(bottomPanel, BorderLayout.SOUTH);
 
-        JButton jbSendMessage = new JButton("Send");
+        JButton jbSendMessage = new JButton("Send");           // button for sending messages
         bottomPanel.add(jbSendMessage, BorderLayout.EAST);
 
-        jtfMessage = new JTextField("Enter your message: ");
+        jtfMessage = new JTextField("Enter your message: ");        // area for entering message
         bottomPanel.add(jtfMessage, BorderLayout.CENTER);
 
-        jtfName = new JTextField("Enter your name:");
+        jtfName = new JTextField("Enter your name:");               // area for entering name of client
         bottomPanel.add(jtfName, BorderLayout.WEST);
 
-        jbSendMessage.addActionListener(new ActionListener() {
+        jbSendMessage.addActionListener(new ActionListener() {      // listener for button "send"
             @Override
             public void actionPerformed(ActionEvent e) {
-                // если имя клиента, и сообщение непустые, то отправляем сообщение
-                if (!jtfMessage.getText().trim().isEmpty() && !jtfName.getText().trim().isEmpty()) {
+                if (!jtfMessage.getText().isEmpty() && !jtfName.getText().isEmpty()) {
                     clientName = jtfName.getText();
                     sendMsg();
-                    // фокус на текстовое поле с сообщением
                     jtfMessage.grabFocus();
                 }
             }
         });
 
-        jtfMessage.addFocusListener(new FocusAdapter() {
+        jtfMessage.addFocusListener(new FocusAdapter() {            // set message area empty
             @Override
             public void focusGained(FocusEvent e) {
                 jtfMessage.setText("");
             }
         });
 
-        jtfName.addFocusListener(new FocusAdapter() {
+        jtfName.addFocusListener(new FocusAdapter() {               // set name area empty
             @Override
             public void focusGained(FocusEvent e) {
                 if (jtfName.getText().equals("Enter your name:")) {
@@ -88,7 +87,7 @@ public class ClientWindow extends JFrame {
             }
         });
 
-        new Thread(new Runnable() {
+        new Thread(new Runnable() {                                 // creating new Thread for client
             @Override
             public void run() {
                 try{
@@ -110,7 +109,7 @@ public class ClientWindow extends JFrame {
             }
         }).start();
 
-        addWindowListener(new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {                     // listener for closing window
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);

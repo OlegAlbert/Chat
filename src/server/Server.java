@@ -6,21 +6,21 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server {
-    private static final int PORT = 1234; // port which will be used in connection
+    private static final int PORT = 1234;                                           // port which will be used in connection
     private ArrayList<ClientConnection> clientConnectionsList = new ArrayList<ClientConnection>(); // list of clients that have been connected
 
     public Server() {
-        Socket clientSocket = null;
-        ServerSocket serverSocket = null;
+        Socket clientSocket = null;                     // client socket
+        ServerSocket serverSocket = null;               // server socket
 
         try {
-            serverSocket = new ServerSocket(PORT);
+            serverSocket = new ServerSocket(PORT);      // creating server socket
             System.out.println("Server started");
             while (true) {
-                clientSocket = serverSocket.accept();
+                clientSocket = serverSocket.accept();   // server is waiting for new connection
                 ClientConnection client = new ClientConnection(clientSocket, this);
                 clientConnectionsList.add(client);
-                new Thread(client).start();
+                new Thread(client).start();             // creating a new thread for client
             }
         } catch (IOException e) {
             e.printStackTrace();

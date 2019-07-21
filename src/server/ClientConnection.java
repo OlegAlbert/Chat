@@ -6,15 +6,16 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientConnection implements Runnable {
-    private Server server;
-    private PrintWriter out;
-    private Scanner in;
+    private Server server;                  // server
+    private PrintWriter out;                // for output stream
+    private Scanner in;                     // for input stream
     private static final int PORT = 1234;
     private static final String HOST = "localhost";
 
     private Socket clientSocket = null;
-    private static int clientCount = 0;
-    ClientConnection(Socket clientSocket, Server server)  {
+    private static int clientCount = 0;     // count for clients
+
+    ClientConnection(Socket clientSocket, Server server)  { // constructor for new connection
         try {
             clientCount++;
             this.server = server;
@@ -28,27 +29,19 @@ public class ClientConnection implements Runnable {
 
     @Override
     public void run() {
-        try {
-            server.sendMessageToAll("New client joined!");
-            server.sendMessageToAll("Number of clients: " + clientCount);
-            while (true) {
-                if (in.hasNext()) {
-                    String clientMsg = in.nextLine();
-                    if (clientMsg.endsWith("exit")) {
-                        break;
-                    }
-                    System.out.println(clientMsg);
-                    server.sendMessageToAll(clientMsg);
+        server.sendMessageToAll("New client joined!");
+        server.sendMessageToAll("Number of clients: " + clientCount);
+        while (true) {
+            if (in.hasNext()) {
+                String clientMsg = in.nextLine();
+                if (clientMsg.endsWith("exit")) {
+                    break;
                 }
-                Thread.sleep(100);
+                System.out.println(clientMsg);
+                server.sendMessageToAll(clientMsg);
             }
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        } finally {
-            this.close();
         }
+        this.close();
     }
 
     public void sendMsg(String msg) {
